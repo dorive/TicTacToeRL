@@ -33,13 +33,14 @@ class TTTQlearning:
                 self.statesNext[state].append(st)
 
                 if st not in self.statesScores:
-                    game_over, score = self.gameController.is_game_over(state)
+                    game_over, score = self.gameController.is_game_over(st)
                     if game_over:
                         self.statesScores[st] = score
                     else:
                         self.statesScores[st] = random.uniform(-0.15, 0.15)
 
             if player == 'X':
+                print(state)
                 self.statesScores[state] = self.lowestQvalue(state)
             else:
                 self.statesScores[state] = self.highestQvalue(state)
@@ -80,7 +81,7 @@ class TTTQlearning:
         """
 
         return min([self.statesScores[st] for st in self.statesNext[state]])
-    
+
 
     def highestQvalue(self, state):
         """

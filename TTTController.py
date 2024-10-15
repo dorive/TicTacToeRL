@@ -112,6 +112,20 @@ class TTTController:
         return False, 0
     
 
+    def get_reward(self, state):
+        """
+        Returns the reward for tic tac toe game.
+
+        INPUTS:
+            * state (str): current board state.
+        OUTPUTS:
+            * reward (float)
+        """
+
+        _, reward = self.is_game_over(state)
+        return reward
+    
+
     def print_grid(self, state):
         """
         Draws the 4x4 board.

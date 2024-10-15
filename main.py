@@ -24,13 +24,15 @@ def start_learning_TTT(startState, maxGames):
         qlearn.addKey(state)
 
         # Choose an action naively
-        next_state, reward = qlearn.chooseActionNaive(state)
+        next_state, _ = qlearn.chooseActionNaive(state)
+        reward = game_controller.get_reward(next_state)
         qlearn.addKey(next_state)
 
         # Update the Q value for the state
         qlearn.updateQvalues(state, next_state, reward)
 
         # If game has not ended then keep playing
+        print(next_state)
         if game_controller.is_game_over(next_state)[0]:
             state = '_'*16 + 'X'
             games += 1
