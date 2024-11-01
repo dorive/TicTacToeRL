@@ -1,4 +1,5 @@
 import logging
+import json
 from TTTQlearning import TTTQlearning
 from TTTController import TTTController
 
@@ -17,8 +18,8 @@ def start_learning_TTT(startState, maxGames):
     games = 0
   
     while games < maxGames:  
-        
-        logging.info(f'Game {games+1} from {maxGames}')
+
+        print(state)
 
         # Add state if new
         qlearn.addKey(state)
@@ -32,16 +33,22 @@ def start_learning_TTT(startState, maxGames):
         qlearn.updateQvalues(state, next_state, reward)
 
         # If game has not ended then keep playing
-        print(next_state)
         if game_controller.is_game_over(next_state)[0]:
+            logging.info(f'Game {games+1} from {maxGames} is over.')
             state = '_'*16 + 'X'
             games += 1
         else:
             state = next_state
 
+    return qlearn.statesScores
+
 
 if __name__ == "__main__":
 
-    MAX_GAMES = 100
+    MAX_GAMES = 100000
 
-    start_learning_TTT('_'*16 + 'X', MAX_GAMES)
+    Q = start_learning_TTT('_'*16 + 'X', MAX_GAMES)
+
+    # Save dictionary to a JSON file
+    with open(f"Q_{MAX_GAMES}iters_4x4.json", "w") as json_file:
+        json.dump(Q, json_file)
