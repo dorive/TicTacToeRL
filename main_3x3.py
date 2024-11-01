@@ -1,5 +1,6 @@
 import logging
 import json
+import matplotlib.pyplot as plt
 from TTTQlearning import TTTQlearning
 from TTTController_3x3 import TTTController_3x3
 
@@ -16,6 +17,8 @@ def start_learning_TTT(startState, maxGames):
     qlearn = TTTQlearning(game_controller)
     state = startState
     games = 0
+    n_states = []
+
   
     while games < maxGames:  
 
@@ -34,22 +37,32 @@ def start_learning_TTT(startState, maxGames):
 
         # If game has not ended then keep playing
         if game_controller.is_game_over(next_state)[0]:
-            print(next_state)
             logging.info(f'Game {games+1} from {maxGames} is over.')
             state = '_'*9 + 'X'
             games += 1
         else:
             state = next_state
 
-    return qlearn.statesScores
+        n_states.append(len(qlearn.statesScores))
+
+    return n_states, qlearn.statesScores
 
 
 if __name__ == "__main__":
 
     MAX_GAMES = 100000
 
-    Q = start_learning_TTT('_'*9 + 'X', MAX_GAMES)
+    n_states, Q = start_learning_TTT('_'*9 + 'X', MAX_GAMES)
 
     # Save dictionary to a JSON file
     with open(f"Q_{MAX_GAMES}iters_3x3.json", "w") as json_file:
         json.dump(Q, json_file)
+
+    # Plot the number of states
+    plt.plot(range(len(n_states)), n_states, marker='o', linestyle='-', color='b')
+    plt.xlabel('Iteration')
+    plt.ylabel('# of states')
+    plt.title('Number of states explored')
+    plt.savefig(f'nstates_3x3_{MAX_GAMES}steps.png', dpi=250)
+
+    
