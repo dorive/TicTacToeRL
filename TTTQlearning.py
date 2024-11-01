@@ -19,10 +19,17 @@ class TTTQlearning:
             - state (str): state in standard format
         """
 
+        game_over, score = self.gameController.is_game_over(state)
+
+        if game_over:
+            self.statesScores[state] = score
+            return
+
         # Player at state
         player = state[-1]
 
         if state not in self.statesNext:
+
             # Get next states
             next_states = self.gameController.get_next_states(state)
 
@@ -40,7 +47,6 @@ class TTTQlearning:
                         self.statesScores[st] = random.uniform(-0.15, 0.15)
 
             if player == 'X':
-                print(state)
                 self.statesScores[state] = self.lowestQvalue(state)
             else:
                 self.statesScores[state] = self.highestQvalue(state)
@@ -72,20 +78,20 @@ class TTTQlearning:
 
     def lowestQvalue(self, state):
         """
-        Returns the lowest reward action from given state.
+        Returns the lowest Q action from given state.
 
         INPUTS:
             * state (str): state in standard format
         OUTPUTS:
             * (float) it will return the lowest reward.
         """
-
+        
         return min([self.statesScores[st] for st in self.statesNext[state]])
 
 
     def highestQvalue(self, state):
         """
-        Returns the highest reward action from given state.
+        Returns the highest Q action from given state.
 
         INPUTS:
             * state (str): state in standard format
@@ -117,11 +123,11 @@ class TTTQlearning:
             else:
                 expected = reward + (self.discount * self.highestQvalue(next_state))
         
-        change = self.learningRate * (expected - self.statesScores[next_state])
+        change = self.learningRate * (expected - self.statesScores[state])
 
-        if self.gameController.is_game_over(next_state)[0] and change != 0.0:
-            import pdb
-            pdb.set_trace()
+        # if (state == '_XO_XO___X') and (next_state == '_XO_XO_X_O'):
+        #     import pdb
+        #     pdb.set_trace()
 
-        self.statesScores[next_state] += change
+        self.statesScores[state] += change
 
