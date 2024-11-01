@@ -1,8 +1,8 @@
-class TTTController:
+class TTTController_3x3:
 
     def __init__(self):
         """
-        This class deals with all complexities of 4x4 tic-tac-toe game.
+        This class deals with all complexities of 3x3 tic-tac-toe game.
         """
         return
 
@@ -51,61 +51,44 @@ class TTTController:
         state = state[:-1]
 
         # Check that the state is correct
-        if len(state) != 16:
+        if len(state) != 9:
             raise ValueError('Board state length is not correct!')
 
-        # CASE 1: all corners are taken by the same player
-        if (state[0] != '_') and (state[0] == state[3] == state[12] == state[15]):
-            if state[0] == 'X':
-                return True, 1
-            else:
-                return True, -1
+        # Convert board string to a 3x3 list
+        state = [state[i:i+3] for i in range(0, 9, 3)]
 
-        # Convert board string to a 4x4 list
-        state = [state[i:i+4] for i in range(0, 16, 4)]
-
-        # CASE 2: Four in a row (vertical, horizontal or diagonal)
+        # CASE 1: Three in a row (vertical, horizontal or diagonal)
         for row in state: # Check rows
-            if (row[0] != '_') and (row.count(row[0]) == 4):
+            if (row[0] != '_') and (row.count(row[0]) == 3):
                 if row[0] == 'X':
                     return True, 1
                 else:
                     return True, -1
             
-        for col in range(4): # Check columns
-            column = [state[row][col] for row in range(4)]
-            if (column[0] != '_') and (column.count(column[0]) == 4):
+        for col in range(3): # Check columns
+            column = [state[row][col] for row in range(3)]
+            if (column[0] != '_') and (column.count(column[0]) == 3):
                 if column[0] == 'X':
                     return True, 1
                 else:
                     return True, -1
 
         # Check diagonals
-        diagonal1 = [state[i][i] for i in range(4)]
-        diagonal2 = [state[i][3-i] for i in range(4)]
+        diagonal1 = [state[i][i] for i in range(3)]
+        diagonal2 = [state[i][2-i] for i in range(3)]
         
-        if diagonal1[0] != '_' and diagonal1.count(diagonal1[0]) == 4:
+        if diagonal1[0] != '_' and diagonal1.count(diagonal1[0]) == 3:
             if diagonal1[0] == 'X':
                 return True, 1
             else:
                 return True, -1
-        if diagonal2[0] != '_' and diagonal2.count(diagonal2[0]) == 4:
+        if diagonal2[0] != '_' and diagonal2.count(diagonal2[0]) == 3:
             if diagonal2[0] == 'X':
                 return True, 1
             else:
                 return True, -1
 
-        # CASE 3: Four in a square (2x2)
-        for i in range(3):
-            for j in range(3):
-                square = [state[i][j], state[i][j+1], state[i+1][j], state[i+1][j+1]]
-                if square[0] != '_' and square.count(square[0]) == 4:
-                    if square[0] == 'X':
-                        return True, 1
-                    else:
-                        return True, -1
-                    
-        # CASE 4: Draw
+        # CASE 2: Draw
         if '_' not in ''.join(state):
             return True, 0
     
@@ -128,11 +111,11 @@ class TTTController:
 
     def print_grid(self, state):
         """
-        Draws the 4x4 board.
+        Draws the 3x3 board.
 
         INPUTS:
             * state (str): current board state.
         """
 
-        for i in range(0, len(state), 4):
-            print(state[i:i+4])
+        for i in range(0, len(state), 3):
+            print(state[i:i+3])
