@@ -1,13 +1,13 @@
 from TTTController import TTTController
 
 
-class TTTController_3x3(TTTController):
+class TTTController_4x4(TTTController):
 
     def __init__(self):
         """
-        This class deals with all complexities of 3x3 tic-tac-toe game.
+        This class deals with all complexities of 4x4 tic-tac-toe game.
         """
-        self.board_len = 3
+        self.board_len = 4
 
 
     def is_game_over(self, state):
@@ -27,10 +27,17 @@ class TTTController_3x3(TTTController):
         if len(state) != self.board_len**2:
             raise ValueError('Board state length is not correct!')
 
-        # Convert board string to a 3x3 list
+        # CASE 1: all corners are taken by the same player
+        if (state[0] != '_') and (state[0] == state[3] == state[12] == state[15]):
+            if state[0] == 'X':
+                return True, 1
+            else:
+                return True, -1
+
+        # Convert board string to a 4x4 list
         state = [state[i:i+self.board_len] for i in range(0, self.board_len**2, self.board_len)]
 
-        # CASE 1: Three in a row (vertical, horizontal or diagonal)
+        # CASE 2: Four in a row (vertical, horizontal or diagonal)
         for row in state: # Check rows
             if (row[0] != '_') and (row.count(row[0]) == self.board_len):
                 if row[0] == 'X':
@@ -61,7 +68,17 @@ class TTTController_3x3(TTTController):
             else:
                 return True, -1
 
-        # CASE 2: Draw
+        # CASE 3: Four in a square (2x2)
+        for i in range(self.board_len-1):
+            for j in range(self.board_len-1):
+                square = [state[i][j], state[i][j+1], state[i+1][j], state[i+1][j+1]]
+                if square[0] != '_' and square.count(square[0]) == self.board_len:
+                    if square[0] == 'X':
+                        return True, 1
+                    else:
+                        return True, -1
+                    
+        # CASE 4: Draw
         if '_' not in ''.join(state):
             return True, 0
     
@@ -70,7 +87,7 @@ class TTTController_3x3(TTTController):
 
     def print_grid(self, state):
         """
-        Draws the 3x3 board.
+        Draws the 4x4 board.
 
         INPUTS:
             * state (str): current board state.
