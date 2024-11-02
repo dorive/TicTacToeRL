@@ -1,12 +1,27 @@
 import json
-from TTTController import TTTController
+from TTTController_3x3 import TTTController_3x3
+from TTTController_4x4 import TTTController_4x4
+
+
+# Prompt user until a valid game mode ('3' or '4') is provided
+while True:
+    board_length = input("What board size do you want to play with? ('3' or '4'): ").upper()
+    if board_length in ['3', '4']:
+        print(f"You chose: {board_length}")
+        board_length = int(board_length)
+        break
+    else:
+        print("Invalid input. Please enter only '3' or '4'.")
 
 # Load dictionary from a JSON file
-with open("Q_100000iters_4x4.json", "r") as json_file:
+with open(f"Q_{board_length}x{board_length}.json", "r") as json_file:
     Q = json.load(json_file)
 
 # Load game controller
-game_controller = TTTController()
+if board_length == 3:
+    game_controller = TTTController_3x3()
+else:    
+    game_controller = TTTController_4x4()
 
 # Prompt user until a valid input ('X' or 'O') is provided
 while True:
@@ -18,7 +33,7 @@ while True:
         print("Invalid input. Please enter only 'X' or 'O'.")
 
 # Start game
-game_state = '_'*16 + 'X'
+game_state = '_'*(board_length**2) + 'X'
 side_turn  = game_state[-1]
 
 while not game_controller.is_game_over(game_state)[0]:
@@ -35,7 +50,7 @@ while not game_controller.is_game_over(game_state)[0]:
                 row, col = map(int, coordinates.split(','))
                 row_index = row - 1
                 col_index = col - 1
-                index = row_index * 4 + col_index
+                index = row_index * board_length + col_index
                 if game_state[index] == '_':
                     break  # Exit loop if input is valid
             except ValueError:
