@@ -14,7 +14,7 @@ while True:
         print("Invalid input. Please enter only '3' or '4'.")
 
 # Load dictionary from a JSON file
-with open(f"Q_{board_length}x{board_length}.json", "r") as json_file:
+with open(f"strategies/Q_{board_length}x{board_length}.json", "r") as json_file:
     Q = json.load(json_file)
 
 # Load game controller
