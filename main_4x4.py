@@ -50,12 +50,12 @@ def start_learning_TTT(startState, maxGames):
 
 if __name__ == "__main__":
 
-    MAX_GAMES = 1000000
+    MAX_GAMES = 1e6
 
     n_states, Q = start_learning_TTT('_'*16 + 'X', MAX_GAMES)
 
     # Save dictionary to a JSON file
-    with open(f"Q_{MAX_GAMES}iters_4x4.json", "w") as json_file:
+    with open("strategies/Q_4x4.json", "w") as json_file:
         json.dump(Q, json_file)
 
     # Plot the number of states
@@ -63,6 +63,6 @@ if __name__ == "__main__":
     plt.xlabel('Iteration')
     plt.ylabel('# of states')
     plt.title('Number of states explored')
-    plt.savefig(f'nstates_4x4_{MAX_GAMES}steps.png', dpi=250)
+    plt.savefig(f'figs/nstates_4x4_{int(MAX_GAMES)}steps.png', dpi=250)
 
     
